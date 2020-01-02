@@ -66,7 +66,7 @@ const Form = ({numberChange, setErrorMessage, nameChange, persons, note, setNote
               setNote(null)
             }, 5000)
           })
-          .catch(error => {
+          /*.catch(error => {
             setErrorMessage(
               `Person ${person.name} was already removed from server`
             )
@@ -74,7 +74,7 @@ const Form = ({numberChange, setErrorMessage, nameChange, persons, note, setNote
               setErrorMessage(null)
             }, 5000)
             //setPersons(persons.filter(p => p.id !== changedPerson.id))
-          })
+          })*/
       }
     }
     else {
