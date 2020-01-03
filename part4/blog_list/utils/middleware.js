@@ -24,9 +24,11 @@ const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     request.params.token = authorization.substring(7)
+    request.token = authorization.substring(7)
     next()
   } else {
     request.params.token = null
+    request.token = null
     next()
   }
 }
