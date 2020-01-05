@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-const Notification = ({message, note}) => {
+const Notification = ({ message, note }) => {
   if (message === null && note === null) {
     return null
   }

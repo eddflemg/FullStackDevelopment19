@@ -1,7 +1,7 @@
 import Blog from './Blog'
-import React from 'react';
+import React from 'react'
 
-const Blogs = ({blogs, setBlogs}) => {
+const Blogs = ({ blogs }) => {
 
   /*const searchResults = searching
     ? persons.filter(person => person.name.toLowerCase().includes(newSearch.toLowerCase()))

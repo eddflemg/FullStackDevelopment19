@@ -1,14 +1,19 @@
 import blogService from '../services/blogs'
-import React from 'react';
+import React from 'react'
 import loginService from '../services/login'
+import PropTypes from 'prop-types'
+import Input from './Input'
 
-const Login = ({ user, username, password, setUser, setUsername, setPassword, setErrorMessage}) => {
+const Login = ({ userName, passWord, setUser, setErrorMessage }) => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
+      const username = userName.value
+      const password = passWord.value
+      console.log(username, ' ', password);
       const user = await loginService.login({
-        username, password,
+        username, password
       })
 
       window.localStorage.setItem(
@@ -16,8 +21,8 @@ const Login = ({ user, username, password, setUser, setUsername, setPassword, se
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      userName.reset('')
+      passWord.reset('')
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -31,25 +36,28 @@ const Login = ({ user, username, password, setUser, setUsername, setPassword, se
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
-          type="text"
-          value={username}
+        <Input
+          {...userName}
           name="Username"
-          onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
         password
-          <input
-          type="password"
-          value={password}
+        <Input
+          {...passWord}
           name="Password"
-          onChange={({ target }) => setPassword(target.value)}
         />
       </div>
       <button type="submit">login</button>
     </form>
   )
+}
+
+Login.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
+  userName: PropTypes.object.isRequired,
+  passWord: PropTypes.object.isRequired
 }
 
 export default Login

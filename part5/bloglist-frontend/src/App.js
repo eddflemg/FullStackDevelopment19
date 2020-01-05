@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import Form from './components/Form'
 import Notification from './components/Notification'
 import Login from './components/Login'
+import Togglable from './components/Togglable'
 import Blogs from './components/Blogs'
 import blogService from './services/blogs'
+import  { useField } from './hooks'
 
 const App = () => {
   const [ blogs, setBlogs] = useState([])
@@ -12,16 +14,18 @@ const App = () => {
   const [ newURL, setNewURL ] = useState('')
   const [ errorMessage, setErrorMessage] = useState(null)
   const [ note, setNote ] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('text')
+  //const [username, setUsername] = useState('')
+  //const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() =>
-    {
-      blogService
-        .getAll()
-        .then(response => setBlogs(response))
-    },
+  {
+    blogService
+      .getAll()
+      .then(response => setBlogs(response))
+  },
   [])
 
   useEffect(() => {
@@ -30,14 +34,13 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      console.log(user.token);
     }
   }, [])
 
   const loginForm = () => (
     <div>
       <h2>Login</h2>
-      <Login username={username} password={password} user={user} setUsername={setUsername} setPassword={setPassword} setUser={setUser} setErrorMessage={setErrorMessage} />
+      <Login userName={username} passWord={password} user={user} setUser={setUser} setErrorMessage={setErrorMessage} />
     </div>
   )
 
@@ -46,10 +49,14 @@ const App = () => {
     setUser(null)
   }
 
+  const blogFormRef = React.createRef()
+
   const blogForm = () => (
     <div>
       <p>{user.username} logged in</p> <button onClick={logOut} >Log out</button>
-      <Form newURL={newURL} newTitle={newTitle} newAuthor={newAuthor} setNewURL={setNewURL} setNewTitle={setNewTitle} setNewAuthor={setNewAuthor} setBlogs={setBlogs} blogs={blogs} setErrorMessage={setErrorMessage} setNote={setNote} note={note} />
+      <Togglable buttonLabel="New blog post" ref={blogFormRef}>
+        <Form blogFormRef={blogFormRef} newURL={newURL} newTitle={newTitle} newAuthor={newAuthor} setNewURL={setNewURL} setNewTitle={setNewTitle} setNewAuthor={setNewAuthor} setBlogs={setBlogs} blogs={blogs} setErrorMessage={setErrorMessage} setNote={setNote} note={note} />
+      </Togglable>
       <Blogs blogs={blogs} setBlogs={setBlogs} />
     </div>
   )
@@ -59,7 +66,7 @@ const App = () => {
       <Notification message={errorMessage} note={note} />
       {user === null ? loginForm() : blogForm()}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
